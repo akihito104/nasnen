@@ -2,7 +2,10 @@ package com.freshdigitable.upnpsample
 
 import android.util.Log
 import net.mm2d.upnp.Device
+import net.mm2d.upnp.util.asIterable
 import org.w3c.dom.Element
+import org.w3c.dom.Node
+import org.w3c.dom.NodeList
 import org.xml.sax.InputSource
 import java.io.StringReader
 import javax.xml.parsers.DocumentBuilderFactory
@@ -23,58 +26,7 @@ class NasneDevice(
         val action = requireNotNull(nasne.findAction("X_GetRecordScheduleList"))
         return suspendCoroutine { cont ->
             action.invoke(args, onResult = {
-                cont.resume(it.toList().fold(RecordScheduleListResponse()) { res, (t, u) ->
-                    when (t) {
-                        "Result" -> {
-                            val xml = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-                                .parse(InputSource(StringReader(u)))
-                                .documentElement
-                            res.result.items.addAll((0 until xml.childNodes.length).map { i ->
-                                val node = xml.childNodes.item(i)
-//                                Log.d(TAG, "node> ${node.nodeName}: ${node.nodeValue}")
-                                RecordScheduleListResponse.ResultItem().also { resultItem ->
-                                    (0 until node.childNodes.length).forEach { j ->
-                                        val item = node.childNodes.item(j) as Element
-                                        when (item.tagName) {
-                                            "title" -> resultItem.title = item.textContent
-                                            "scheduledStartDateTime" -> resultItem.scheduledStartDateTime =
-                                                item.textContent
-                                            "scheduledDuration" -> resultItem.scheduledDuration =
-                                                item.textContent.toInt()
-                                            "scheduledConditionID" -> resultItem.scheduledConditionID =
-                                                item.textContent
-                                            "scheduledChannelID" -> resultItem.scheduledChannelID =
-                                                item.textContent
-                                            "desiredMatchingID" -> resultItem.desiredMatchingID =
-                                                item.textContent
-                                            "desiredQualityMode" -> resultItem.desiredQualityMode =
-                                                item.textContent
-                                            "genreID" -> resultItem.genreID = item.textContent
-                                            "conflictID" -> resultItem.conflictID =
-                                                item.textContent
-                                            "mediaRemainAlertID" -> resultItem.mediaRemainAlertID =
-                                                item.textContent
-                                            "reservationCreatorID" -> resultItem.reservationCreatorID
-                                            "recordingFlag" -> resultItem.recordingFlag =
-                                                item.textContent
-                                            "recordDestinationID" -> resultItem.recordDestinationID =
-                                                item.textContent
-                                            "recordSize" -> resultItem.recordSize =
-                                                item.textContent.toInt()
-                                            "portableRecordFile" -> resultItem.portableRecordFile =
-                                                item.textContent
-                                            else -> Log.d(TAG, "unknown tag: ")
-                                        }
-                                    }
-                                }
-                            })
-                        }
-                        "NumberReturned" -> res.numberReturned = u.toInt()
-                        "TotalMatches" -> res.totalMatches = u.toInt()
-                        "UpdateID" -> res.updateId = u
-                    }
-                    res
-                })
+                cont.resume(RecordScheduleListResponse.create(it))
             })
         }
     }
@@ -111,4 +63,55 @@ data class RecordScheduleListResponse(
         var recordSize: Int = 0,
         var portableRecordFile: String = ""
     )
+
+    companion object {
+        private val TAG = RecordScheduleListResponse::class.java.simpleName
+
+        fun create(rawRes: Map<String, String>): RecordScheduleListResponse {
+            return rawRes.toList().fold(RecordScheduleListResponse()) { res, (t, u) ->
+                when (t) {
+                    "Result" -> {
+                        val xml = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+                            .parse(InputSource(StringReader(u)))
+                            .documentElement
+                        res.result.items.addAll(xml.childNodes.map { createItem(it) })
+                    }
+                    "NumberReturned" -> res.numberReturned = u.toInt()
+                    "TotalMatches" -> res.totalMatches = u.toInt()
+                    "UpdateID" -> res.updateId = u
+                }
+                res
+            }
+        }
+
+        private fun createItem(itemNode: Node): ResultItem {
+            return ResultItem().apply {
+                itemNode.childNodes.map { it as Element }.forEach { item ->
+                    val textContent = item.textContent
+                    when (item.tagName) {
+                        "title" -> title = textContent
+                        "scheduledStartDateTime" -> scheduledStartDateTime = textContent
+                        "scheduledDuration" -> scheduledDuration = textContent.toInt()
+                        "scheduledConditionID" -> scheduledConditionID = textContent
+                        "scheduledChannelID" -> scheduledChannelID = textContent
+                        "desiredMatchingID" -> desiredMatchingID = textContent
+                        "desiredQualityMode" -> desiredQualityMode = textContent
+                        "genreID" -> genreID = textContent
+                        "conflictID" -> conflictID = textContent
+                        "mediaRemainAlertID" -> mediaRemainAlertID = textContent
+                        "reservationCreatorID" -> reservationCreatorID = textContent
+                        "recordingFlag" -> recordingFlag = textContent
+                        "recordDestinationID" -> recordDestinationID = textContent
+                        "recordSize" -> recordSize = textContent.toInt()
+                        "portableRecordFile" -> portableRecordFile = textContent
+                        else -> Log.d(TAG, "unknown tag: ")
+                    }
+                }
+            }
+        }
+    }
+}
+
+inline fun <R> NodeList.map (block: (Node) -> R): List<R> {
+    return this.asIterable().map(block)
 }
