@@ -34,10 +34,12 @@ class MainActivity : AppCompatActivity() {
             this@MainActivity.controlPoint = controlPoint
             lifecycleScope.launchWhenCreated {
                 val device = controlPoint.searchDeviceByFriendlyName("nasne")
-                val recordScheduleList = NasneDevice(device).getRecordScheduleList()
-                recordScheduleList.result.items.forEach {
-                    Log.d(TAG, "$it")
-                }
+                val nasneDevice = NasneDevice(device)
+                logd("recordScheduleList", nasneDevice.getRecordScheduleList())
+                logd("getConflictList", nasneDevice.getConflictList())
+                logd("getTitleList", nasneDevice.getTitleList())
+//                Log.d(TAG, "getLiveChList: ${nasneDevice.getLiveChList()}")
+//                Log.d(TAG, "getMediaInfo: ${nasneDevice.getMediaInfo()}")
             }
         }
     }
@@ -112,5 +114,11 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private val TAG = MainActivity::class.java.simpleName
+        fun logd(msg: String, res: ListResponse<*>) {
+            Log.d(TAG, "$msg: num>${res.numberReturned}, total>${res.totalMatches}")
+            res.result.forEach {
+                Log.d(TAG, "$it")
+            }
+        }
     }
 }
