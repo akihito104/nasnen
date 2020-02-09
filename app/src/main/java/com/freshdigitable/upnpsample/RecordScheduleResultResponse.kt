@@ -3,7 +3,7 @@ package com.freshdigitable.upnpsample
 import android.util.Log
 import org.w3c.dom.Node
 
-data class ListResponse<T>(
+data class RecordScheduleResultResponse<T>(
     var numberReturned: Int = 0,
     var totalMatches: Int = 0,
     var updateId: String = "",
@@ -11,13 +11,13 @@ data class ListResponse<T>(
 ) {
 
     companion object {
-        private val TAG = ListResponse::class.java.simpleName
+        private val TAG = RecordScheduleResultResponse::class.java.simpleName
 
         fun <T> create(
             rawRes: Map<String, String>,
             block: (Node) -> T
-        ): ListResponse<T> = rawRes.toList().fold(
-            ListResponse()
+        ): RecordScheduleResultResponse<T> = rawRes.toList().fold(
+            RecordScheduleResultResponse()
         ) { res, (t, u) ->
             res.apply {
                 when (t) {

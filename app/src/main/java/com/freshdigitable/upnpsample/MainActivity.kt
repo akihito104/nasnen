@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private val TAG = MainActivity::class.java.simpleName
-        fun logd(msg: String, res: ListResponse<*>) {
+        fun logd(msg: String, res: RecordScheduleResultResponse<*>) {
             Log.d(TAG, "$msg: num>${res.numberReturned}, total>${res.totalMatches}")
             res.result.forEach {
                 Log.d(TAG, "$it")

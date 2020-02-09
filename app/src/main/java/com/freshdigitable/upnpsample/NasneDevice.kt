@@ -8,7 +8,7 @@ import kotlin.coroutines.suspendCoroutine
 class NasneDevice(
     private val nasne: Device
 ) {
-    suspend fun getRecordScheduleList(): ListResponse<RecordScheduleItem> {
+    suspend fun getRecordScheduleList(): RecordScheduleResultResponse<RecordScheduleItem> {
         val args = mapOf(
             "SearchCriteria" to "",
             "Filter" to "",
@@ -17,20 +17,20 @@ class NasneDevice(
             "SortCriteria" to ""
         )
         return action("X_GetRecordScheduleList", args) { res ->
-            ListResponse.create(res) { node -> RecordScheduleItem.createItem(node) }
+            RecordScheduleResultResponse.create(res) { node -> RecordScheduleItem.createItem(node) }
         }
     }
 
-    suspend fun getConflictList(): ListResponse<RecordScheduleItem> { // わからん
+    suspend fun getConflictList(): RecordScheduleResultResponse<RecordScheduleItem> { // わからん
         val args = mapOf(
             "Elements" to ""
         )
         return action("X_GetConflictList", args) { res ->
-            ListResponse.create(res) { node -> RecordScheduleItem.createItem(node) }
+            RecordScheduleResultResponse.create(res) { node -> RecordScheduleItem.createItem(node) }
         }
     }
 
-    suspend fun getTitleList(): ListResponse<TitleItem> {
+    suspend fun getTitleList(): RecordScheduleResultResponse<TitleItem> {
         val args = mapOf(
             "SearchCriteria" to "",
             "Filter" to "",
@@ -39,7 +39,7 @@ class NasneDevice(
             "SortCriteria" to ""
         )
         return action("X_GetTitleList", args) { map ->
-            ListResponse.create(map) { node -> TitleItem.createItem(node) }
+            RecordScheduleResultResponse.create(map) { node -> TitleItem.createItem(node) }
         }
     }
 
