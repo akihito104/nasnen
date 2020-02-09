@@ -1,6 +1,5 @@
 package com.freshdigitable.upnpsample
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -21,42 +20,49 @@ import kotlin.coroutines.suspendCoroutine
 
 class MainActivity : AppCompatActivity() {
 
-    private var wifiLock: WifiManager.WifiLock? = null
     private var controlPoint: ControlPoint? = null
 
-    private val broadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val controlPoint = initControlPoint()
-            Log.d(TAG, "cp> $controlPoint")
-            if (controlPoint == null) {
-                return
-            }
-            this@MainActivity.controlPoint = controlPoint
-            lifecycleScope.launchWhenCreated {
-                val device = controlPoint.searchDeviceByFriendlyName("nasne")
-                val nasneDevice = NasneDevice(device)
-                logd("recordScheduleList", nasneDevice.getRecordScheduleList())
-                logd("getConflictList", nasneDevice.getConflictList())
-                logd("getTitleList", nasneDevice.getTitleList())
-//                Log.d(TAG, "getLiveChList: ${nasneDevice.getLiveChList()}")
-//                Log.d(TAG, "getMediaInfo: ${nasneDevice.getMediaInfo()}")
-            }
-        }
-    }
-
-    @SuppressLint("WifiManagerLeak")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        registerReceiver(broadcastReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        lifecycleScope.launchWhenCreated {
+            val controlPoint = findControlPoint() ?: return@launchWhenCreated
+            this@MainActivity.controlPoint = controlPoint
+            val device = controlPoint.searchDeviceByFriendlyName("nasne")
+            val nasneDevice = NasneDevice(device)
+            logd("recordScheduleList", nasneDevice.getRecordScheduleList())
+//            logd("getConflictList", nasneDevice.getConflictList())
+            logd("getTitleList", nasneDevice.getTitleList())
+//                Log.d(TAG, "getLiveChList: ${nasneDevice.getLiveChList()}")
+//                Log.d(TAG, "getMediaInfo: ${nasneDevice.getMediaInfo()}")
 
-        val wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
-        wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL, "hoge").apply {
-            setReferenceCounted(true)
-            acquire()
         }
 
+    }
+
+    private suspend fun findControlPoint(): ControlPoint? {
+        var wifiLock: WifiManager.WifiLock? = null
+        return suspendCoroutine { cont ->
+            registerReceiver(object : BroadcastReceiver() {
+                override fun onReceive(context: Context?, intent: Intent?) {
+                    val controlPoint = initControlPoint()
+                    Log.d(TAG, "cp> $controlPoint")
+                    cont.resume(controlPoint)
+                    unregisterReceiver(this)
+                    if (wifiLock?.isHeld == true) {
+                        wifiLock?.release()
+                    }
+                }
+            }, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+
+            val wifiManager =
+                applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL, "hoge").apply {
+                setReferenceCounted(true)
+                acquire()
+            }
+        }
     }
 
     private fun initControlPoint(): ControlPoint? {
@@ -102,13 +108,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(broadcastReceiver)
         controlPoint?.run {
             stop()
             terminate()
-        }
-        if (wifiLock?.isHeld == true) {
-            wifiLock?.release()
         }
     }
 
