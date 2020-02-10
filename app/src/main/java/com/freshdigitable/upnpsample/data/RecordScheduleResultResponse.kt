@@ -1,6 +1,8 @@
-package com.freshdigitable.upnpsample
+package com.freshdigitable.upnpsample.data
 
 import android.util.Log
+import com.freshdigitable.upnpsample.map
+import com.freshdigitable.upnpsample.toXmlElements
 import org.w3c.dom.Node
 
 data class RecordScheduleResultResponse<T>(

@@ -1,6 +1,10 @@
 package com.freshdigitable.upnpsample
 
 import android.util.Log
+import com.freshdigitable.upnpsample.data.PvrRes
+import com.freshdigitable.upnpsample.data.RecordScheduleItem
+import com.freshdigitable.upnpsample.data.RecordScheduleResultResponse
+import com.freshdigitable.upnpsample.data.TitleItem
 import net.mm2d.upnp.Device
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine

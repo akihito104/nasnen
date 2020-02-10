@@ -1,6 +1,7 @@
-package com.freshdigitable.upnpsample
+package com.freshdigitable.upnpsample.data
 
 import android.util.Log
+import com.freshdigitable.upnpsample.toXmlElements
 import net.mm2d.upnp.util.asIterable
 import org.w3c.dom.Element
 
