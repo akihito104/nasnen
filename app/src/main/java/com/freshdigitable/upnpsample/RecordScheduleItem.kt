@@ -21,6 +21,9 @@ data class RecordScheduleItem(
     var recordSize: Int = 0,
     var portableRecordFile: String = ""
 ) {
+    val hasWarnings: Boolean
+        get () = mediaRemainAlertID.isNotEmpty() || conflictID.isNotEmpty()
+
     companion object {
         private val TAG = RecordScheduleItem::class.java.simpleName
 

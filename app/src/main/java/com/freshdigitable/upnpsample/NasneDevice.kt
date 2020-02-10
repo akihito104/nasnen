@@ -8,18 +8,36 @@ import kotlin.coroutines.suspendCoroutine
 class NasneDevice(
     private val nasne: Device
 ) {
-    suspend fun getRecordScheduleList(): RecordScheduleResultResponse<RecordScheduleItem> {
-        val args = mapOf(
-            "SearchCriteria" to "",
-            "Filter" to "",
-            "StartingIndex" to "",
-            "RequestedCount" to "",
-            "SortCriteria" to ""
-        )
+    suspend fun getRecordScheduleList(
+        startingIndex: Int? = null,
+        count: Int? = null
+    ): RecordScheduleResultResponse<RecordScheduleItem> {
+        val args = recordScheduleArgs(startingIndex, count)
         return action("X_GetRecordScheduleList", args) { res ->
             RecordScheduleResultResponse.create(res) { node -> RecordScheduleItem.createItem(node) }
         }
     }
+
+    suspend fun getTitleList(
+        startingIndex: Int? = null,
+        count: Int? = null
+    ): RecordScheduleResultResponse<TitleItem> {
+        val args = recordScheduleArgs(startingIndex, count)
+        return action("X_GetTitleList", args) { map ->
+            RecordScheduleResultResponse.create(map) { node -> TitleItem.createItem(node) }
+        }
+    }
+
+    private fun recordScheduleArgs(
+        startingIndex: Int? = null,
+        count: Int? = null
+    ): Map<String, String> = mapOf(
+        "SearchCriteria" to "",
+        "Filter" to "",
+        "StartingIndex" to (startingIndex?.toString() ?: ""),
+        "RequestedCount" to (count?.toString() ?: ""),
+        "SortCriteria" to ""
+    )
 
     suspend fun getConflictList(): RecordScheduleResultResponse<RecordScheduleItem> { // わからん
         val args = mapOf(
@@ -27,19 +45,6 @@ class NasneDevice(
         )
         return action("X_GetConflictList", args) { res ->
             RecordScheduleResultResponse.create(res) { node -> RecordScheduleItem.createItem(node) }
-        }
-    }
-
-    suspend fun getTitleList(): RecordScheduleResultResponse<TitleItem> {
-        val args = mapOf(
-            "SearchCriteria" to "",
-            "Filter" to "",
-            "StartingIndex" to "",
-            "RequestedCount" to "10",
-            "SortCriteria" to ""
-        )
-        return action("X_GetTitleList", args) { map ->
-            RecordScheduleResultResponse.create(map) { node -> TitleItem.createItem(node) }
         }
     }
 
