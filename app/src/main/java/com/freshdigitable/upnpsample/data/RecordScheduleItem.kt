@@ -10,7 +10,15 @@ data class RecordScheduleItem(
     var scheduledStartDateTime: String = "",
     var scheduledDuration: Int = 0,
     var scheduledConditionID: String = "",
+
+    /**
+     * recording TV channel code (hex decimal)
+     */
     var scheduledChannelID: String = "",
+
+    /**
+     * TV channel code list broadcasting same program? (up to 4 of hex decimal)
+     */
     var desiredMatchingID: String = "",
     var desiredQualityMode: String = "",
     var genreID: String = "",
@@ -23,7 +31,7 @@ data class RecordScheduleItem(
     var portableRecordFile: String = ""
 ) {
     val hasWarnings: Boolean
-        get () = mediaRemainAlertID.isNotEmpty() || conflictID.isNotEmpty()
+        get() = mediaRemainAlertID != "0" || conflictID != "0" || desiredMatchingID.isEmpty()
 
     companion object {
         private val TAG = RecordScheduleItem::class.java.simpleName
