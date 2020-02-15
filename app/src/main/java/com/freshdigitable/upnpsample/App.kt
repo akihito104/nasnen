@@ -12,22 +12,9 @@ import androidx.work.WorkManager
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 
-class App : Application() {
+class App : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
-
-        val conf = Configuration.Builder()
-            .setWorkerFactory(object : WorkerFactory() {
-                override fun createWorker(
-                    appContext: Context,
-                    workerClassName: String,
-                    workerParameters: WorkerParameters
-                ): ListenableWorker? {
-                    return RecordScheduleCheckWorker(appContext, workerParameters)
-                }
-            })
-            .build()
-        WorkManager.initialize(this, conf)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel =
@@ -41,5 +28,19 @@ class App : Application() {
             NotificationManagerCompat.from(this)
                 .createNotificationChannel(notificationChannel)
         }
+    }
+
+    override fun getWorkManagerConfiguration(): Configuration {
+        return Configuration.Builder()
+            .setWorkerFactory(object : WorkerFactory() {
+                override fun createWorker(
+                    appContext: Context,
+                    workerClassName: String,
+                    workerParameters: WorkerParameters
+                ): ListenableWorker? {
+                    return RecordScheduleCheckWorker(appContext, workerParameters)
+                }
+            })
+            .build()
     }
 }
