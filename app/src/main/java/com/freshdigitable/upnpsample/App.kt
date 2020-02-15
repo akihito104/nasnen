@@ -3,26 +3,32 @@ package com.freshdigitable.upnpsample
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Configuration
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.ListenableWorker
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.WorkerFactory
-import androidx.work.WorkerParameters
+import com.freshdigitable.upnpsample.di.DaggerAppComponent
+import com.freshdigitable.upnpsample.worker.RecordScheduleCheckWorker
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class App : Application(), Configuration.Provider {
-    companion object {
-        private const val WORKER_NAME_SCHEDULE_CHECKER = "scheduleChecker"
-    }
 
     override fun onCreate() {
         super.onCreate()
 
+        val appComponent = DaggerAppComponent.builder()
+            .application(this)
+            .build()
+        appComponent.inject(this)
+
+        setupNotificationChannel()
+        setupPeriodicWorker()
+    }
+
+    private fun setupNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel =
                 NotificationChannel(
@@ -35,7 +41,12 @@ class App : Application(), Configuration.Provider {
             NotificationManagerCompat.from(this)
                 .createNotificationChannel(notificationChannel)
         }
+    }
 
+    @Inject
+    lateinit var workerConfig: Configuration
+
+    private fun setupPeriodicWorker() {
         val workManager = WorkManager.getInstance(this)
         workManager.pruneWork()
         val workRequest =
@@ -48,16 +59,9 @@ class App : Application(), Configuration.Provider {
         )
     }
 
-    override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder().setWorkerFactory(object : WorkerFactory() {
-            override fun createWorker(
-                appContext: Context,
-                workerClassName: String,
-                workerParameters: WorkerParameters
-            ): ListenableWorker? {
-                return RecordScheduleCheckWorker(appContext, workerParameters)
-            }
-        })
-            .build()
+    override fun getWorkManagerConfiguration(): Configuration = workerConfig
+
+    companion object {
+        private const val WORKER_NAME_SCHEDULE_CHECKER = "scheduleChecker"
     }
 }

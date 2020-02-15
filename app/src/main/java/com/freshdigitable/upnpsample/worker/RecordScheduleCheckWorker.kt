@@ -1,10 +1,16 @@
-package com.freshdigitable.upnpsample
+package com.freshdigitable.upnpsample.worker
 
 import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.CoroutineWorker
+import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
+import com.freshdigitable.upnpsample.MainActivity
+import com.freshdigitable.upnpsample.NasneDevice
+import com.freshdigitable.upnpsample.NasneDeviceProvider
+import com.freshdigitable.upnpsample.R
+import javax.inject.Inject
 
 class RecordScheduleCheckWorker(
     private val context: Context,
@@ -40,5 +46,12 @@ class RecordScheduleCheckWorker(
         val nasneDevice = nasneDeviceProvider.findDevice()
         block(nasneDevice)
         nasneDeviceProvider.dispose()
+    }
+
+    class Factory @Inject constructor() : NasneWorkerFactory.Child {
+        override fun create(
+            appContext: Context,
+            workerParameters: WorkerParameters
+        ): ListenableWorker = RecordScheduleCheckWorker(appContext, workerParameters)
     }
 }
