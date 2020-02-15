@@ -7,12 +7,19 @@ import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Configuration
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ListenableWorker
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
+import java.util.concurrent.TimeUnit
 
 class App : Application(), Configuration.Provider {
+    companion object {
+        private const val WORKER_NAME_SCHEDULE_CHECKER = "scheduleChecker"
+    }
+
     override fun onCreate() {
         super.onCreate()
 
@@ -28,19 +35,29 @@ class App : Application(), Configuration.Provider {
             NotificationManagerCompat.from(this)
                 .createNotificationChannel(notificationChannel)
         }
+
+        val workManager = WorkManager.getInstance(this)
+        workManager.pruneWork()
+        val workRequest =
+            PeriodicWorkRequestBuilder<RecordScheduleCheckWorker>(30, TimeUnit.MINUTES)
+                .build()
+        workManager.enqueueUniquePeriodicWork(
+            WORKER_NAME_SCHEDULE_CHECKER,
+            ExistingPeriodicWorkPolicy.REPLACE,
+            workRequest
+        )
     }
 
     override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder()
-            .setWorkerFactory(object : WorkerFactory() {
-                override fun createWorker(
-                    appContext: Context,
-                    workerClassName: String,
-                    workerParameters: WorkerParameters
-                ): ListenableWorker? {
-                    return RecordScheduleCheckWorker(appContext, workerParameters)
-                }
-            })
+        return Configuration.Builder().setWorkerFactory(object : WorkerFactory() {
+            override fun createWorker(
+                appContext: Context,
+                workerClassName: String,
+                workerParameters: WorkerParameters
+            ): ListenableWorker? {
+                return RecordScheduleCheckWorker(appContext, workerParameters)
+            }
+        })
             .build()
     }
 }
