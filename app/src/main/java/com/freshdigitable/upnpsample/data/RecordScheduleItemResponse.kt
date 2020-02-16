@@ -2,43 +2,42 @@ package com.freshdigitable.upnpsample.data
 
 import android.util.Log
 import com.freshdigitable.upnpsample.map
+import com.freshdigitable.upnpsample.model.RecordScheduleItem
 import org.w3c.dom.Element
 import org.w3c.dom.Node
 
-data class RecordScheduleItem(
-    var title: String = "",
-    var scheduledStartDateTime: String = "",
-    var scheduledDuration: Int = 0,
-    var scheduledConditionID: String = "",
+data class RecordScheduleItemResponse(
+    override var title: String = "",
+    override var scheduledStartDateTime: String = "",
+    override var scheduledDuration: Int = 0,
+    override var scheduledConditionID: String = "",
 
     /**
      * recording TV channel code (hex decimal)
      */
-    var scheduledChannelID: String = "",
+    override var scheduledChannelID: String = "",
 
     /**
      * TV channel code list broadcasting same program? (up to 4 of hex decimal)
      */
-    var desiredMatchingID: String = "",
-    var desiredQualityMode: String = "",
-    var genreID: String = "",
-    var conflictID: String = "",
-    var mediaRemainAlertID: String = "",
-    var reservationCreatorID: String = "",
-    var recordingFlag: String = "",
-    var recordDestinationID: String = "",
-    var recordSize: Int = 0,
-    var portableRecordFile: String = ""
-) {
-    val hasWarnings: Boolean
-        get() = mediaRemainAlertID != "0" || conflictID != "0" || desiredMatchingID.isEmpty()
+    override var desiredMatchingID: String = "",
+    override var desiredQualityMode: String = "",
+    override var genreID: String = "",
+    override var conflictID: String = "",
+    override var mediaRemainAlertID: String = "",
+    override var reservationCreatorID: String = "",
+    override var recordingFlag: String = "",
+    override var recordDestinationID: String = "",
+    override var recordSize: Int = 0,
+    override var portableRecordFile: String = ""
+) : RecordScheduleItem {
 
     companion object {
-        private val TAG = RecordScheduleItem::class.java.simpleName
+        private val TAG = RecordScheduleItemResponse::class.java.simpleName
 
-        fun createItem(itemNode: Node): RecordScheduleItem = itemNode.childNodes
+        fun createItem(itemNode: Node): RecordScheduleItemResponse = itemNode.childNodes
             .map { it as Element }
-            .fold(RecordScheduleItem()) { res, item ->
+            .fold(RecordScheduleItemResponse()) { res, item ->
                 res.apply {
                     val textContent = item.textContent
                     when (item.tagName) {

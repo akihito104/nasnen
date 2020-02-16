@@ -1,15 +1,16 @@
 package com.freshdigitable.upnpsample.data
 
 import android.util.Log
+import com.freshdigitable.upnpsample.model.Pvr
 import com.freshdigitable.upnpsample.toXmlElements
 import net.mm2d.upnp.util.asIterable
 import org.w3c.dom.Element
 
 data class PvrRes(
-    var channelNum: Int = 0,
-    var channelList: String = "",
-    var channelPropertyList: String = ""
-) {
+    override var channelNum: Int = 0,
+    override var channelList: String = "",
+    override var channelPropertyList: String = ""
+) : Pvr {
     companion object {
         fun create(res: Map<String, String>): PvrRes = res.toList().filter { it.first == "Result" }
             .map { it.second.toXmlElements().childNodes.asIterable() }

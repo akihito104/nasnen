@@ -2,9 +2,9 @@ package com.freshdigitable.upnpsample
 
 import android.util.Log
 import com.freshdigitable.upnpsample.data.PvrRes
-import com.freshdigitable.upnpsample.data.RecordScheduleItem
+import com.freshdigitable.upnpsample.data.RecordScheduleItemResponse
 import com.freshdigitable.upnpsample.data.RecordScheduleResultResponse
-import com.freshdigitable.upnpsample.data.TitleItem
+import com.freshdigitable.upnpsample.data.TitleItemResponse
 import net.mm2d.upnp.Device
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -15,20 +15,20 @@ class NasneDevice(
     suspend fun getRecordScheduleList(
         startingIndex: Int? = null,
         count: Int? = null
-    ): RecordScheduleResultResponse<RecordScheduleItem> {
+    ): RecordScheduleResultResponse<RecordScheduleItemResponse> {
         val args = recordScheduleArgs(startingIndex, count)
         return action("X_GetRecordScheduleList", args) { res ->
-            RecordScheduleResultResponse.create(res) { node -> RecordScheduleItem.createItem(node) }
+            RecordScheduleResultResponse.create(res) { node -> RecordScheduleItemResponse.createItem(node) }
         }
     }
 
     suspend fun getTitleList(
         startingIndex: Int? = null,
         count: Int? = null
-    ): RecordScheduleResultResponse<TitleItem> {
+    ): RecordScheduleResultResponse<TitleItemResponse> {
         val args = recordScheduleArgs(startingIndex, count)
         return action("X_GetTitleList", args) { map ->
-            RecordScheduleResultResponse.create(map) { node -> TitleItem.createItem(node) }
+            RecordScheduleResultResponse.create(map) { node -> TitleItemResponse.createItem(node) }
         }
     }
 
@@ -43,12 +43,12 @@ class NasneDevice(
         "SortCriteria" to ""
     )
 
-    suspend fun getConflictList(): RecordScheduleResultResponse<RecordScheduleItem> { // わからん
+    suspend fun getConflictList(): RecordScheduleResultResponse<RecordScheduleItemResponse> { // わからん
         val args = mapOf(
             "Elements" to ""
         )
         return action("X_GetConflictList", args) { res ->
-            RecordScheduleResultResponse.create(res) { node -> RecordScheduleItem.createItem(node) }
+            RecordScheduleResultResponse.create(res) { node -> RecordScheduleItemResponse.createItem(node) }
         }
     }
 

@@ -2,31 +2,32 @@ package com.freshdigitable.upnpsample.data
 
 import android.util.Log
 import com.freshdigitable.upnpsample.map
+import com.freshdigitable.upnpsample.model.TitleItem
 import org.w3c.dom.Element
 import org.w3c.dom.Node
 
-data class TitleItem(
-    var title: String = "",
-    var scheduledStartDateTime: String = "",
-    var scheduledDuration: Int = 0,
-    var scheduledChannelID: String = "",
-    var desiredQualityMode: String = "",
-    var genreID: String = "",
-    var reservationCreatorID: String = "",
-    var recordingFlag: String = "",
-    var recordDestinationID: String = "",
-    var recordSize: Int = 0,
-    var portableRecordFile: String = "",
-    var titleProtectFlag: String = "",
-    var titleNewFlag: String = "",
-    var lastPlaybackTime: String = ""
-) {
+data class TitleItemResponse(
+    override var title: String = "",
+    override var scheduledStartDateTime: String = "",
+    override var scheduledDuration: Int = 0,
+    override var scheduledChannelID: String = "",
+    override var desiredQualityMode: String = "",
+    override var genreID: String = "",
+    override var reservationCreatorID: String = "",
+    override var recordingFlag: String = "",
+    override var recordDestinationID: String = "",
+    override var recordSize: Int = 0,
+    override var portableRecordFile: String = "",
+    override var titleProtectFlag: String = "",
+    override var titleNewFlag: String = "",
+    override var lastPlaybackTime: String = ""
+) : TitleItem {
     companion object {
-        private val TAG = RecordScheduleItem::class.java.simpleName
+        private val TAG = RecordScheduleItemResponse::class.java.simpleName
 
-        fun createItem(itemNode: Node): TitleItem = itemNode.childNodes
+        fun createItem(itemNode: Node): TitleItemResponse = itemNode.childNodes
             .map { it as Element }
-            .fold(TitleItem()) { res, item ->
+            .fold(TitleItemResponse()) { res, item ->
                 res.apply {
                     val textContent = item.textContent
                     when (item.tagName) {
