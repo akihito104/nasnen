@@ -7,6 +7,7 @@ buildscript {
             "androidx_core"     : "1.2.0",
             "androidx_lifecycle": "2.2.0",
             "androidx_worker"   : "2.3.1",
+            "androidx_room"     : "2.2.3",
             "dagger"            : "2.26"
     ]
 

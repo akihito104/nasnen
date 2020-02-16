@@ -43,6 +43,10 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:$versions.androidx_worker"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
+    implementation "androidx.room:room-runtime:$versions.androidx_room"
+    kapt "androidx.room:room-compiler:$versions.androidx_room"
+    implementation "androidx.room:room-ktx:$versions.androidx_room"
+
     api "com.google.dagger:dagger:$versions.dagger"
     kapt "com.google.dagger:dagger-compiler:$versions.dagger"
 
