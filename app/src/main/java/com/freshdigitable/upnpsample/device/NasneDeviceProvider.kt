@@ -1,4 +1,4 @@
-package com.freshdigitable.upnpsample
+package com.freshdigitable.upnpsample.device
 
 import android.content.BroadcastReceiver
 import android.content.Context

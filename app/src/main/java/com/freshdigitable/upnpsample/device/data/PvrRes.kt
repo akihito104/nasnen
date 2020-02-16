@@ -1,4 +1,4 @@
-package com.freshdigitable.upnpsample.data
+package com.freshdigitable.upnpsample.device.data
 
 import android.util.Log
 import com.freshdigitable.upnpsample.model.Pvr

@@ -7,8 +7,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import com.freshdigitable.upnpsample.MainActivity
-import com.freshdigitable.upnpsample.NasneDevice
-import com.freshdigitable.upnpsample.NasneDeviceProvider
+import com.freshdigitable.upnpsample.device.NasneDevice
+import com.freshdigitable.upnpsample.device.NasneDeviceProvider
 import com.freshdigitable.upnpsample.R
 import javax.inject.Inject
 
