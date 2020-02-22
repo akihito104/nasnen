@@ -3,12 +3,18 @@
 buildscript {
     ext.kotlin_version = '1.3.61'
     ext.versions = [
-            "androidx_appcompat": "1.0.2",
-            "androidx_core"     : "1.2.0",
-            "androidx_lifecycle": "2.2.0",
-            "androidx_worker"   : "2.3.1",
-            "androidx_room"     : "2.2.3",
-            "dagger"            : "2.26"
+            "androidx_appcompat"     : "1.0.2",
+            "androidx_core"          : "1.2.0",
+            "androidx_lifecycle"     : "2.2.0",
+            "androidx_worker"        : "2.3.1",
+            "androidx_room"          : "2.2.3",
+            "dagger"                 : "2.26",
+
+            "truth"                  : "1.0",
+            "mockk"                  : "1.9.3",
+            "androidx_test"          : "1.2.0",
+            "androidx_test_ext_junit": "1.1.1",
+            "androidx_test_ext_truth": "1.2.0"
     ]
 
     repositories {

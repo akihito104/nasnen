@@ -16,8 +16,9 @@ class RecordScheduleRepository @Inject constructor(
 ) {
     fun getAllRecordScheduleSource(): LiveData<List<RecordScheduleItem>> {
         return liveData {
-            val source =
-                dao.getAllRecordScheduleItemSource().map { it.map { i -> i as RecordScheduleItem } }
+            val source = dao.getAllRecordScheduleItemSource().map {
+                it.map { i -> i as RecordScheduleItem }
+            }
             emitSource(source)
             getAllRecordScheduleItems()
         }
@@ -25,10 +26,8 @@ class RecordScheduleRepository @Inject constructor(
 
     suspend fun getAllRecordScheduleItems(): List<RecordScheduleItem> {
         val items = dao.getAllRecordScheduleItems()
-        val currentTimeMillis = System.currentTimeMillis()
-        return if (items.isEmpty() ||
-            items.any { currentTimeMillis - it.lastFetchTime > TimeUnit.MINUTES.toMillis(30) }
-        ) {
+        val expiredTimeMillis = System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(30)
+        return if (items.isEmpty() || items.any { it.lastFetchTime < expiredTimeMillis }) {
             fetchRecordScheduleList()
         } else {
             items
@@ -36,10 +35,15 @@ class RecordScheduleRepository @Inject constructor(
     }
 
     private suspend fun fetchRecordScheduleList(): List<RecordScheduleItem> {
-        val device = deviceProvider.findDevice()
-        val recordScheduleList = device.getRecordScheduleList()
-        val time = System.currentTimeMillis()
-        dao.replaceAllScheduleItems(recordScheduleList.result.map { it.toEntity(time) })
-        return recordScheduleList.result
+        return try {
+            deviceProvider.init()
+            val device = deviceProvider.findDevice()
+            device.getRecordScheduleList().result.also { items ->
+                val time = System.currentTimeMillis()
+                dao.replaceAllScheduleItems(items.map { it.toEntity(time) })
+            }
+        } finally {
+            deviceProvider.dispose()
+        }
     }
 }
