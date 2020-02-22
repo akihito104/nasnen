@@ -8,7 +8,9 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [
-        WorkerModule::class
+        WorkerModule::class,
+        DaoModule::class,
+        NasneModule::class
     ]
 )
 interface AppComponent {
