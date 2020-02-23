@@ -12,10 +12,11 @@ import javax.inject.Inject
 
 class RecordScheduleRepository @Inject constructor(
     private val dao: RecordScheduleDao,
-    private val deviceProvider: NasneDeviceProvider
+    private val deviceProvider: NasneDeviceProvider,
+    private val coroutineContextProvider: CoroutineContextProvider = CoroutineContextProvider()
 ) {
     fun getAllRecordScheduleSource(): LiveData<List<RecordScheduleItem>> {
-        return liveData {
+        return liveData(coroutineContextProvider.mainContext) {
             val source = dao.getAllRecordScheduleItemSource().map {
                 it.map { i -> i as RecordScheduleItem }
             }

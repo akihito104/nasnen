@@ -21,6 +21,7 @@ class App : Application(), Configuration.Provider {
 
         val appComponent = DaggerAppComponent.builder()
             .application(this)
+            .coroutineContextProvider(CoroutineContextProvider())
             .build()
         appComponent.inject(this)
 
@@ -46,6 +47,8 @@ class App : Application(), Configuration.Provider {
     @Inject
     lateinit var workerConfig: Configuration
 
+    override fun getWorkManagerConfiguration(): Configuration = workerConfig
+
     private fun setupPeriodicWorker() {
         val workManager = WorkManager.getInstance(this)
         workManager.pruneWork()
@@ -54,12 +57,10 @@ class App : Application(), Configuration.Provider {
                 .build()
         workManager.enqueueUniquePeriodicWork(
             WORKER_NAME_SCHEDULE_CHECKER,
-            ExistingPeriodicWorkPolicy.REPLACE,
+            ExistingPeriodicWorkPolicy.KEEP,
             workRequest
         )
     }
-
-    override fun getWorkManagerConfiguration(): Configuration = workerConfig
 
     companion object {
         private const val WORKER_NAME_SCHEDULE_CHECKER = "scheduleChecker"
