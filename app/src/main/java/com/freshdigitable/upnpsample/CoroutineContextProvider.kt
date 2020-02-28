@@ -17,8 +17,6 @@ class CoroutineContextProvider(
         get() = io.withHandler()
 
     private fun CoroutineDispatcher.withHandler(): CoroutineContext {
-        return this.apply {
-            exceptionHandler?.let { plus(it) }
-        }
+        return exceptionHandler?.plus(this) ?: this
     }
 }
