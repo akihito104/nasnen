@@ -8,9 +8,8 @@ import com.freshdigitable.upnpsample.db.toEntity
 import com.freshdigitable.upnpsample.device.NasneDeviceProvider
 import com.freshdigitable.upnpsample.model.RecordScheduleItem
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
-class RecordScheduleRepository @Inject constructor(
+class RecordScheduleRepository(
     private val dao: RecordScheduleDao,
     private val deviceProvider: NasneDeviceProvider,
     private val coroutineContextProvider: CoroutineContextProvider = CoroutineContextProvider()

@@ -21,7 +21,6 @@ class App : Application(), Configuration.Provider {
 
         val appComponent = DaggerAppComponent.builder()
             .application(this)
-            .coroutineContextProvider(CoroutineContextProvider())
             .build()
         appComponent.inject(this)
 
