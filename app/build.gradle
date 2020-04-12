@@ -50,6 +50,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$versions.androidx_lifecycle"
     implementation "androidx.work:work-runtime-ktx:$versions.androidx_worker"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
 
     implementation "androidx.room:room-runtime:$versions.androidx_room"
     kapt "androidx.room:room-compiler:$versions.androidx_room"

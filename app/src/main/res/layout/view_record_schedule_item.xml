@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    >
+    <ImageView
+        android:id="@+id/record_schedule_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/record_schedule_title"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintHorizontal_bias="0"
+        />
+    <TextView
+        android:id="@+id/record_schedule_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintWidth_default="wrap"
+        app:layout_constraintTop_toTopOf="@id/record_schedule_icon"
+        app:layout_constraintStart_toEndOf="@id/record_schedule_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="16dp"
+        android:lines="1"
+        android:ellipsize="end"
+        tools:ignore="SpUsage"
+        tools:text="title"
+        />
+    <TextView
+        android:id="@+id/record_schedule_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/record_schedule_title"
+        app:layout_constraintStart_toStartOf="@id/record_schedule_title"
+        android:textSize="14dp"
+        android:lines="1"
+        tools:text="date"
+        tools:ignore="SpUsage"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

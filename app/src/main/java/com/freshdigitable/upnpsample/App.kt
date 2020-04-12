@@ -9,6 +9,7 @@ import androidx.work.Configuration
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.freshdigitable.upnpsample.di.AppComponent
 import com.freshdigitable.upnpsample.di.DaggerAppComponent
 import com.freshdigitable.upnpsample.worker.RecordScheduleCheckWorker
 import java.util.concurrent.TimeUnit
@@ -16,12 +17,15 @@ import javax.inject.Inject
 
 class App : Application(), Configuration.Provider {
 
+    val appComponent: AppComponent by lazy {
+        DaggerAppComponent.builder()
+            .application(this)
+            .build()
+    }
+
     override fun onCreate() {
         super.onCreate()
 
-        val appComponent = DaggerAppComponent.builder()
-            .application(this)
-            .build()
         appComponent.inject(this)
 
         setupNotificationChannel()
