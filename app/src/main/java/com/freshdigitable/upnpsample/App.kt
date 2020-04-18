@@ -12,6 +12,7 @@ import androidx.work.WorkManager
 import com.freshdigitable.upnpsample.di.AppComponent
 import com.freshdigitable.upnpsample.di.DaggerAppComponent
 import com.freshdigitable.upnpsample.worker.RecordScheduleCheckWorker
+import com.jakewharton.threetenabp.AndroidThreeTen
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -25,6 +26,7 @@ class App : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        AndroidThreeTen.init(this)
 
         appComponent.inject(this)
 
