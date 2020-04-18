@@ -33,9 +33,12 @@ class MainListAdapter : RecyclerView.Adapter<ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
-        if (item.hasWarnings) {
-            holder.icon.setImageResource(R.drawable.ic_warning_black_24dp)
-        }
+        holder.icon.setImageResource(
+            when (item.hasWarnings) {
+                true -> R.drawable.ic_warning_black_24dp
+                false -> R.drawable.ic_archive_black_24dp
+            }
+        )
         holder.title.text = item.title
         holder.date.text = item.scheduledStartDateTime
     }
