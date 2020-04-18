@@ -19,9 +19,10 @@
         />
     <TextView
         android:id="@+id/record_schedule_title"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintWidth_default="wrap"
+        app:layout_constrainedWidth="true"
+        app:layout_constrainedHeight="true"
         app:layout_constraintTop_toTopOf="@id/record_schedule_icon"
         app:layout_constraintStart_toEndOf="@id/record_schedule_icon"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,6 +36,8 @@
         android:id="@+id/record_schedule_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constrainedHeight="true"
+        app:layout_constrainedWidth="true"
         app:layout_constraintTop_toBottomOf="@id/record_schedule_title"
         app:layout_constraintStart_toStartOf="@id/record_schedule_title"
         android:textSize="14dp"
