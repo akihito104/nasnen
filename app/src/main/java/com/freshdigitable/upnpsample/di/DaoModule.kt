@@ -20,7 +20,6 @@ interface DaoModule {
                 "nasne"
             )
                 .fallbackToDestructiveMigration()
-                .fallbackToDestructiveMigrationOnDowngrade()
                 .build()
         }
 

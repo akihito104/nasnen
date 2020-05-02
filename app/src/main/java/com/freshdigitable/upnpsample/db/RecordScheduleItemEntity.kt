@@ -3,7 +3,10 @@ package com.freshdigitable.upnpsample.db
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
 import com.freshdigitable.upnpsample.model.RecordScheduleItem
+import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.format.DateTimeFormatter
 
 @Entity(tableName = "record_schedule")
 data class RecordScheduleItemEntity(
@@ -12,7 +15,7 @@ data class RecordScheduleItemEntity(
     override val title: String,
 
     @ColumnInfo(name = "start_datetime")
-    override val scheduledStartDateTime: String,
+    override val scheduledStartDateTime: OffsetDateTime,
 
     @ColumnInfo(name = "duration")
     override val scheduledDuration: Int,
@@ -76,4 +79,16 @@ fun RecordScheduleItem.toEntity(timestampMillis: Long): RecordScheduleItemEntity
         portableRecordFile = portableRecordFile,
         lastFetchTime = timestampMillis
     )
+}
+
+object OffsetDateTimeConverter {
+    private val formatter: DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+
+    @TypeConverter
+    @JvmStatic
+    fun toInstant(value: String): OffsetDateTime = formatter.parse(value, OffsetDateTime.FROM)
+
+    @TypeConverter
+    @JvmStatic
+    fun toDatetimeString(value: OffsetDateTime): String = formatter.format(value)
 }

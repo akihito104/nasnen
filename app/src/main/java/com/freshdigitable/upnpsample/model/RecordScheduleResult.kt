@@ -1,8 +1,6 @@
 package com.freshdigitable.upnpsample.model
 
-import org.threeten.bp.chrono.IsoChronology
-import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.format.DateTimeFormatterBuilder
+import org.threeten.bp.OffsetDateTime
 
 interface RecordScheduleResult<T> {
     val numberReturned: Int
@@ -12,15 +10,8 @@ interface RecordScheduleResult<T> {
 }
 
 interface RecordScheduleItem {
-    companion object {
-        val NASNE_DATE_TIME_FORMAT: DateTimeFormatter = DateTimeFormatterBuilder().parseCaseInsensitive()
-            .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-            .appendOffset("+HHMM", "Z")
-            .toFormatter().withChronology(IsoChronology.INSTANCE)
-    }
-
     val title: String
-    val scheduledStartDateTime: String
+    val scheduledStartDateTime: OffsetDateTime
     val scheduledDuration: Int
     val scheduledConditionID: String
 

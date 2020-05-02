@@ -10,9 +10,7 @@ import com.freshdigitable.upnpsample.model.RecordScheduleItem
 import kotlinx.android.synthetic.main.view_record_schedule_item.view.record_schedule_date
 import kotlinx.android.synthetic.main.view_record_schedule_item.view.record_schedule_icon
 import kotlinx.android.synthetic.main.view_record_schedule_item.view.record_schedule_title
-import org.threeten.bp.Instant
 import org.threeten.bp.OffsetDateTime
-import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.TextStyle
 import java.util.Locale
 
@@ -45,9 +43,7 @@ class MainListAdapter : RecyclerView.Adapter<ViewHolder>() {
             }
         )
         holder.title.text = item.title
-        holder.date.setListItemDatetime(RecordScheduleItem.NASNE_DATE_TIME_FORMAT.parse(
-            item.scheduledStartDateTime, Instant.FROM
-        ))
+        holder.date.setListItemDatetime(item.scheduledStartDateTime)
     }
 }
 
@@ -57,11 +53,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val date: TextView = itemView.record_schedule_date
 }
 
-private fun TextView.setListItemDatetime(
-    instant: Instant,
-    zoneOffset: ZoneOffset = OffsetDateTime.now().offset
-) {
-    val dateTime = instant.atOffset(zoneOffset)
+private fun TextView.setListItemDatetime(dateTime: OffsetDateTime) {
     text = context.getString(
         R.string.listitem_datetime_format,
         dateTime.monthValue,

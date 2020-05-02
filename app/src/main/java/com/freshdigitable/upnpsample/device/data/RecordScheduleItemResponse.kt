@@ -3,12 +3,16 @@ package com.freshdigitable.upnpsample.device.data
 import android.util.Log
 import com.freshdigitable.upnpsample.map
 import com.freshdigitable.upnpsample.model.RecordScheduleItem
+import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.chrono.IsoChronology
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.DateTimeFormatterBuilder
 import org.w3c.dom.Element
 import org.w3c.dom.Node
 
 data class RecordScheduleItemResponse(
     override var title: String = "",
-    override var scheduledStartDateTime: String = "",
+    override var scheduledStartDateTime: OffsetDateTime = OffsetDateTime.MIN,
     override var scheduledDuration: Int = 0,
     override var scheduledConditionID: String = "",
 
@@ -34,6 +38,11 @@ data class RecordScheduleItemResponse(
 
     companion object {
         private val TAG = RecordScheduleItemResponse::class.java.simpleName
+        private val NASNE_DATE_TIME_FORMAT: DateTimeFormatter =
+            DateTimeFormatterBuilder().parseCaseInsensitive()
+                .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                .appendOffset("+HHMM", "Z")
+                .toFormatter().withChronology(IsoChronology.INSTANCE)
 
         fun createItem(itemNode: Node): RecordScheduleItemResponse = itemNode.childNodes
             .map { it as Element }
@@ -42,7 +51,8 @@ data class RecordScheduleItemResponse(
                     val textContent = item.textContent
                     when (item.tagName) {
                         "title" -> title = textContent
-                        "scheduledStartDateTime" -> scheduledStartDateTime = textContent
+                        "scheduledStartDateTime" -> scheduledStartDateTime =
+                            NASNE_DATE_TIME_FORMAT.parse(textContent, OffsetDateTime.FROM)
                         "scheduledDuration" -> scheduledDuration = textContent.toInt()
                         "scheduledConditionID" -> scheduledConditionID = textContent
                         "scheduledChannelID" -> scheduledChannelID = textContent
