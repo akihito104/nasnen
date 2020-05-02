@@ -11,7 +11,8 @@ import kotlinx.android.synthetic.main.view_record_schedule_item.view.record_sche
 import kotlinx.android.synthetic.main.view_record_schedule_item.view.record_schedule_icon
 import kotlinx.android.synthetic.main.view_record_schedule_item.view.record_schedule_title
 import org.threeten.bp.Instant
-import org.threeten.bp.ZoneId
+import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.TextStyle
 import java.util.Locale
 
@@ -44,18 +45,9 @@ class MainListAdapter : RecyclerView.Adapter<ViewHolder>() {
             }
         )
         holder.title.text = item.title
-        holder.date.text = item.scheduledStartDateTime.run {
-            val dateTimeAtZone = RecordScheduleItem.NASNE_DATE_TIME_FORMAT.parse(this, Instant.FROM)
-                .atZone(ZoneId.systemDefault())
-            holder.itemView.context.getString(
-                R.string.listitem_datetime_format,
-                dateTimeAtZone.monthValue,
-                dateTimeAtZone.dayOfMonth,
-                dateTimeAtZone.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
-                dateTimeAtZone.hour,
-                dateTimeAtZone.minute
-            )
-        }
+        holder.date.setListItemDatetime(RecordScheduleItem.NASNE_DATE_TIME_FORMAT.parse(
+            item.scheduledStartDateTime, Instant.FROM
+        ))
     }
 }
 
@@ -63,4 +55,19 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val icon: ImageView = itemView.record_schedule_icon
     val title: TextView = itemView.record_schedule_title
     val date: TextView = itemView.record_schedule_date
+}
+
+private fun TextView.setListItemDatetime(
+    instant: Instant,
+    zoneOffset: ZoneOffset = OffsetDateTime.now().offset
+) {
+    val dateTime = instant.atOffset(zoneOffset)
+    text = context.getString(
+        R.string.listitem_datetime_format,
+        dateTime.monthValue,
+        dateTime.dayOfMonth,
+        dateTime.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+        dateTime.hour,
+        dateTime.minute
+    )
 }
