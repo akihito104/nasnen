@@ -1,6 +1,6 @@
 package com.freshdigitable.upnpsample.di
 
-import com.freshdigitable.upnpsample.App
+import android.app.Application
 import com.freshdigitable.upnpsample.device.NasneDeviceProvider
 import dagger.Module
 import dagger.Provides
@@ -11,7 +11,7 @@ interface NasneModule {
     companion object {
         @Provides
         @Singleton
-        fun provideNasneDeviceProvider(app: App): NasneDeviceProvider {
+        fun provideNasneDeviceProvider(app: Application): NasneDeviceProvider {
             return NasneDeviceProvider(app.applicationContext)
         }
     }

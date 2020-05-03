@@ -2,11 +2,9 @@ package com.freshdigitable.upnpsample.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.freshdigitable.upnpsample.MainViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
-import dagger.multibindings.IntoMap
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.reflect.KClass
@@ -15,11 +13,6 @@ import kotlin.reflect.KClass
 interface ViewModelModule {
     @Binds
     fun bindViewModelProviderFactory(factory: ViewModelFactory): ViewModelProvider.Factory
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(MainViewModel::class)
-    fun bindMainViewModel(viewModel: MainViewModel): ViewModel
 }
 
 @MapKey

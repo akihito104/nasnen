@@ -58,6 +58,8 @@ dependencies {
 
     api "com.google.dagger:dagger:$versions.dagger"
     kapt "com.google.dagger:dagger-compiler:$versions.dagger"
+    api "com.google.dagger:dagger-android:$versions.dagger"
+    kapt "com.google.dagger:dagger-android-processor:$versions.dagger"
 
     implementation 'net.mm2d:mmupnp:3.1.1'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.3'

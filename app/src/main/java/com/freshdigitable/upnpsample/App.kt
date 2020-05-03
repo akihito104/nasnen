@@ -9,26 +9,25 @@ import androidx.work.Configuration
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.freshdigitable.upnpsample.di.AppComponent
 import com.freshdigitable.upnpsample.di.DaggerAppComponent
 import com.freshdigitable.upnpsample.worker.RecordScheduleCheckWorker
 import com.jakewharton.threetenabp.AndroidThreeTen
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class App : Application(), Configuration.Provider {
-
-    val appComponent: AppComponent by lazy {
-        DaggerAppComponent.builder()
-            .application(this)
-            .build()
-    }
+class App : Application(), Configuration.Provider, HasAndroidInjector {
 
     override fun onCreate() {
         super.onCreate()
         AndroidThreeTen.init(this)
 
-        appComponent.inject(this)
+        DaggerAppComponent.builder()
+            .application(this)
+            .build()
+            .inject(this)
 
         setupNotificationChannel()
         setupPeriodicWorker()
@@ -66,6 +65,11 @@ class App : Application(), Configuration.Provider {
             workRequest
         )
     }
+
+    @Inject
+    lateinit var androidInjector: DispatchingAndroidInjector<Any>
+
+    override fun androidInjector(): AndroidInjector<Any> = androidInjector
 
     companion object {
         private const val WORKER_NAME_SCHEDULE_CHECKER = "scheduleChecker"
