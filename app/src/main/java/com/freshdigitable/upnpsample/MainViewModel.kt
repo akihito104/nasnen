@@ -11,4 +11,8 @@ class MainViewModel @Inject constructor(
     val allRecordScheduleItems: LiveData<List<RecordScheduleItem>> by lazy {
         repository.getAllRecordScheduleSource()
     }
+
+    fun findScheduleItemByTitle(title: String): LiveData<RecordScheduleItem?> {
+        return repository.findScheduleItemByTitle(title)
+    }
 }

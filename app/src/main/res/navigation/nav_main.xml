@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/main_list"
+    >
+    <fragment
+        android:id="@+id/main_list"
+        android:name="com.freshdigitable.upnpsample.ListFragment"
+        tools:layout="@layout/fragment_list"
+        >
+        <action
+            android:id="@+id/action_main_list_to_main_detail"
+            app:destination="@id/main_detail"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/main_detail"
+        android:name="com.freshdigitable.upnpsample.DetailFragment"
+        tools:layout="@layout/fragment_detail"
+        />
+</navigation>

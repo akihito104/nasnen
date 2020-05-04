@@ -8,7 +8,8 @@ buildscript {
             "androidx_lifecycle"     : "2.2.0",
             "androidx_worker"        : "2.3.1",
             "androidx_room"          : "2.2.3",
-            "dagger"                 : "2.26",
+            "androidx_navigation"    : "2.3.0-alpha06",
+            "dagger"                 : "2.27",
 
             "truth"                  : "1.0",
             "mockk"                  : "1.9.3",

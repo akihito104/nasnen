@@ -14,8 +14,16 @@ import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.TextStyle
 import java.util.Locale
 
-class MainListAdapter : RecyclerView.Adapter<ViewHolder>() {
+class MainListAdapter(
+    private val itemClickListener: OnItemClickListener
+) : RecyclerView.Adapter<ViewHolder>() {
     private val items = mutableListOf<RecordScheduleItem>()
+
+    init {
+        setHasStableIds(true)
+    }
+
+    override fun getItemId(position: Int): Long = items[position].title.hashCode().toLong() // XXX
 
     fun setItems(items: List<RecordScheduleItem>) {
         this.items.clear()
@@ -45,6 +53,23 @@ class MainListAdapter : RecyclerView.Adapter<ViewHolder>() {
         holder.title.text = item.title
         holder.date.setListItemDatetime(item.scheduledStartDateTime)
     }
+
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        val title = items[holder.adapterPosition].title
+        holder.itemView.setOnClickListener {
+            itemClickListener.onItemClicked(title)
+        }
+    }
+
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.itemView.setOnClickListener(null)
+    }
+
+    interface OnItemClickListener {
+        fun onItemClicked(title: String)
+    }
 }
 
 class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -53,13 +78,17 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val date: TextView = itemView.record_schedule_date
 }
 
-private fun TextView.setListItemDatetime(dateTime: OffsetDateTime) {
-    text = context.getString(
-        R.string.listitem_datetime_format,
-        dateTime.monthValue,
-        dateTime.dayOfMonth,
-        dateTime.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
-        dateTime.hour,
-        dateTime.minute
-    )
+fun TextView.setListItemDatetime(dateTime: OffsetDateTime?) {
+    text = if (dateTime != null) {
+        context.getString(
+            R.string.listitem_datetime_format,
+            dateTime.monthValue,
+            dateTime.dayOfMonth,
+            dateTime.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+            dateTime.hour,
+            dateTime.minute
+        )
+    } else {
+        ""
+    }
 }

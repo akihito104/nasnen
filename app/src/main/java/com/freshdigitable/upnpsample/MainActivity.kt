@@ -3,41 +3,39 @@ package com.freshdigitable.upnpsample
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import androidx.lifecycle.observe
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.freshdigitable.upnpsample.di.ViewModelKey
 import dagger.Binds
 import dagger.Module
 import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
+import dagger.android.ContributesAndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
 import dagger.multibindings.IntoMap
-import kotlinx.android.synthetic.main.activity_main.main_list
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
-    @Inject
-    lateinit var viewModelProvider: ViewModelProvider
+class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val viewModel = viewModelProvider[MainViewModel::class.java]
-        val mainListAdapter = MainListAdapter()
-
-        viewModel.allRecordScheduleItems.observe(this) {
-            mainListAdapter.setItems(it)
-            mainListAdapter.notifyDataSetChanged()
-        }
-        main_list.adapter = mainListAdapter
-        main_list.layoutManager = LinearLayoutManager(this)
     }
+
+    @Inject
+    lateinit var androidInjector: DispatchingAndroidInjector<Any>
+
+    override fun androidInjector(): AndroidInjector<Any> = androidInjector
 }
 
 @Module
 interface MainActivityModule {
+    @ContributesAndroidInjector
+    fun contributeListFragment(): ListFragment
+
+    @ContributesAndroidInjector
+    fun contributeDetailFragment(): DetailFragment
 
     @Binds
     fun bindViewModelStoreOwner(mainActivity: MainActivity): ViewModelStoreOwner

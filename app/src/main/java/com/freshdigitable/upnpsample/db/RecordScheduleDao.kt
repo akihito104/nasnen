@@ -26,4 +26,7 @@ interface RecordScheduleDao {
 
     @Query("SELECT * FROM record_schedule")
     suspend fun getAllRecordScheduleItems(): List<RecordScheduleItemEntity>
+
+    @Query("SELECT * FROM record_schedule WHERE title = :title")
+    fun findScheduleItemByTitle(title: String): LiveData<RecordScheduleItemEntity?>
 }

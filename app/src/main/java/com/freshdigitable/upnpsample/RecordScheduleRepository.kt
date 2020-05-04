@@ -46,4 +46,8 @@ class RecordScheduleRepository(
             deviceProvider.dispose()
         }
     }
+
+    fun findScheduleItemByTitle(title: String): LiveData<RecordScheduleItem?> {
+        return dao.findScheduleItemByTitle(title).map { it as? RecordScheduleItem }
+    }
 }
