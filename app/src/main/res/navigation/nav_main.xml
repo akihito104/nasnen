@@ -18,5 +18,11 @@
         android:id="@+id/main_detail"
         android:name="com.freshdigitable.upnpsample.DetailFragment"
         tools:layout="@layout/fragment_detail"
-        />
+        >
+        <argument
+            android:name="title"
+            app:argType="string"
+            app:nullable="false"
+            />
+    </fragment>
 </navigation>

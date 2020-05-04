@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.freshdigitable.upnpsample.model.RecordScheduleItem
 import kotlinx.android.synthetic.main.view_record_schedule_item.view.record_schedule_date
@@ -14,9 +15,7 @@ import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.TextStyle
 import java.util.Locale
 
-class MainListAdapter(
-    private val itemClickListener: OnItemClickListener
-) : RecyclerView.Adapter<ViewHolder>() {
+class MainListAdapter : RecyclerView.Adapter<ViewHolder>() {
     private val items = mutableListOf<RecordScheduleItem>()
 
     init {
@@ -52,23 +51,14 @@ class MainListAdapter(
         )
         holder.title.text = item.title
         holder.date.setListItemDatetime(item.scheduledStartDateTime)
-    }
 
-    override fun onViewAttachedToWindow(holder: ViewHolder) {
-        super.onViewAttachedToWindow(holder)
-        val title = items[holder.adapterPosition].title
-        holder.itemView.setOnClickListener {
-            itemClickListener.onItemClicked(title)
-        }
+        val action = ListFragmentDirections.actionMainListToMainDetail(item.title)
+        holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(action))
     }
 
     override fun onViewDetachedFromWindow(holder: ViewHolder) {
         super.onViewDetachedFromWindow(holder)
         holder.itemView.setOnClickListener(null)
-    }
-
-    interface OnItemClickListener {
-        fun onItemClicked(title: String)
     }
 }
 

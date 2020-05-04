@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_list.view.main_list
@@ -34,13 +33,7 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewModel = viewModelProvider[MainViewModel::class.java]
-        val mainListAdapter = MainListAdapter(object : MainListAdapter.OnItemClickListener {
-            override fun onItemClicked(title: String) {
-                findNavController().navigate(
-                    R.id.action_main_list_to_main_detail, DetailFragment.createArgument(title)
-                )
-            }
-        })
+        val mainListAdapter = MainListAdapter()
 
         viewModel.allRecordScheduleItems.observe(viewLifecycleOwner) {
             mainListAdapter.setItems(it)
