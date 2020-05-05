@@ -6,16 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.freshdigitable.upnpsample.di.ViewModelKey
+import dagger.Binds
+import dagger.Module
 import dagger.android.support.AndroidSupportInjection
+import dagger.multibindings.IntoMap
 import kotlinx.android.synthetic.main.fragment_list.view.main_list
 import javax.inject.Inject
 
 class ListFragment : Fragment() {
     @Inject
-    lateinit var viewModelProvider: ViewModelProvider
+    lateinit var viewModelProviderFactory: ViewModelProvider.Factory
+    private val viewModel: ListFragmentViewModel by viewModels { viewModelProviderFactory }
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -32,7 +39,6 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewModel = viewModelProvider[MainViewModel::class.java]
         val mainListAdapter = MainListAdapter()
 
         viewModel.allRecordScheduleItems.observe(viewLifecycleOwner) {
@@ -42,4 +48,12 @@ class ListFragment : Fragment() {
         view.main_list.adapter = mainListAdapter
         view.main_list.layoutManager = LinearLayoutManager(requireContext())
     }
+}
+
+@Module
+interface ListFragmentModule {
+    @Binds
+    @IntoMap
+    @ViewModelKey(ListFragmentViewModel::class)
+    fun bindListFragment(viewModel: ListFragmentViewModel): ViewModel
 }

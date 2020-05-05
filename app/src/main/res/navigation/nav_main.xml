@@ -7,6 +7,7 @@
     <fragment
         android:id="@+id/main_list"
         android:name="com.freshdigitable.upnpsample.ListFragment"
+        android:label="@string/title_schedule_list"
         tools:layout="@layout/fragment_list"
         >
         <action
@@ -17,6 +18,7 @@
     <fragment
         android:id="@+id/main_detail"
         android:name="com.freshdigitable.upnpsample.DetailFragment"
+        android:label="@string/title_schedule_detail"
         tools:layout="@layout/fragment_detail"
         >
         <argument

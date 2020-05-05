@@ -5,4 +5,6 @@
     <string name="notif_schedule_checker_description">scheduleChecker description</string>
 
     <string name="listitem_datetime_format">%1$d/%2$d (%3$s) %4$d:%5$02d</string>
+    <string name="title_schedule_list">Recording Schedule</string>
+    <string name="title_schedule_detail">Schedule Detail</string>
 </resources>
