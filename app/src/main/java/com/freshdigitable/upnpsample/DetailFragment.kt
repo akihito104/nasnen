@@ -1,6 +1,7 @@
 package com.freshdigitable.upnpsample
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.navArgs
 import com.freshdigitable.upnpsample.di.ViewModelKey
+import com.google.android.material.transition.MaterialContainerTransform
 import dagger.Binds
 import dagger.Module
 import dagger.android.support.AndroidSupportInjection
@@ -25,6 +27,16 @@ class DetailFragment : Fragment() {
     lateinit var viewModelProviderFactory: ViewModelProvider.Factory
     private val viewModel: DetailFragmentViewModel by viewModels { viewModelProviderFactory }
     private val args: DetailFragmentArgs by navArgs()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            fitMode = MaterialContainerTransform.FIT_MODE_WIDTH
+            fadeMode = MaterialContainerTransform.FADE_MODE_THROUGH
+            containerColor = Color.WHITE
+            isDrawDebugEnabled = true
+        }
+    }
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -41,6 +53,7 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.transitionName = args.sharedElementTransName
         val scheduleItem = viewModel.findScheduleItemByTitle(args.title)
         scheduleItem.observe(viewLifecycleOwner) {
             view.detail_title.text = it?.title

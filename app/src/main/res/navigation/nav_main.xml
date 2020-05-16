@@ -26,5 +26,10 @@
             app:argType="string"
             app:nullable="false"
             />
+        <argument
+            android:name="sharedElementTransName"
+            app:argType="string"
+            app:nullable="false"
+            />
     </fragment>
 </navigation>
