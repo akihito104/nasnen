@@ -2,7 +2,9 @@ package com.freshdigitable.upnpsample
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Path
 import android.os.Bundle
+import android.transition.PathMotion
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.navArgs
 import com.freshdigitable.upnpsample.di.ViewModelKey
+import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
 import dagger.Binds
 import dagger.Module
@@ -35,6 +38,17 @@ class DetailFragment : Fragment() {
             fadeMode = MaterialContainerTransform.FADE_MODE_THROUGH
             containerColor = Color.WHITE
             isDrawDebugEnabled = true
+            // WORKAROUND: path motion is not worked when start point is equal to end point.
+            pathMotion = object : PathMotion() {
+                private val arcMotion = MaterialArcMotion()
+                override fun getPath(startX: Float, startY: Float, endX: Float, endY: Float): Path {
+                    return if (startX != endX || startY != endY) {
+                        arcMotion.getPath(startX, startY, endX, endY)
+                    } else {
+                        arcMotion.getPath(startX, startY - 1, endX, endY)
+                    }
+                }
+            }
         }
     }
 
