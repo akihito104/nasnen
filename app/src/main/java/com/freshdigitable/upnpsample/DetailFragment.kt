@@ -37,7 +37,6 @@ class DetailFragment : Fragment() {
             fitMode = MaterialContainerTransform.FIT_MODE_WIDTH
             fadeMode = MaterialContainerTransform.FADE_MODE_THROUGH
             containerColor = Color.WHITE
-            isDrawDebugEnabled = true
             // WORKAROUND: path motion is not worked when start point is equal to end point.
             pathMotion = object : PathMotion() {
                 private val arcMotion = MaterialArcMotion()
