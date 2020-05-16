@@ -5,7 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import com.freshdigitable.upnpsample.model.RecordScheduleItem
 import kotlinx.android.synthetic.main.view_record_schedule_item.view.record_schedule_date
@@ -51,13 +52,23 @@ class MainListAdapter : RecyclerView.Adapter<ViewHolder>() {
         )
         holder.title.text = item.title
         holder.date.setListItemDatetime(item.scheduledStartDateTime)
+    }
 
-        val action = ListFragmentDirections.actionMainListToMainDetail(item.title)
-        holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(action))
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        val item = items[holder.adapterPosition]
+        val transitionName = "sec_${item.title}"
+        val action = ListFragmentDirections.actionMainListToMainDetail(item.title, transitionName)
+        holder.itemView.transitionName = transitionName
+        holder.itemView.setOnClickListener { v ->
+            v.findNavController()
+                .navigate(action, FragmentNavigatorExtras(v to transitionName))
+        }
     }
 
     override fun onViewDetachedFromWindow(holder: ViewHolder) {
         super.onViewDetachedFromWindow(holder)
+        holder.itemView.transitionName = ""
         holder.itemView.setOnClickListener(null)
     }
 }

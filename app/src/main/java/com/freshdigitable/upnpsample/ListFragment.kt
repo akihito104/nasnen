@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.SharedElementCallback
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
@@ -12,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.freshdigitable.upnpsample.di.ViewModelKey
+import com.google.android.material.transition.Hold
 import dagger.Binds
 import dagger.Module
 import dagger.android.support.AndroidSupportInjection
@@ -23,6 +26,11 @@ class ListFragment : Fragment() {
     @Inject
     lateinit var viewModelProviderFactory: ViewModelProvider.Factory
     private val viewModel: ListFragmentViewModel by viewModels { viewModelProviderFactory }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = Hold()
+    }
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -39,6 +47,10 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // WORKAROUND: for sharedElementReturnTransition with Navigation component
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
+
         val mainListAdapter = MainListAdapter()
 
         viewModel.allRecordScheduleItems.observe(viewLifecycleOwner) {
