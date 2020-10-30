@@ -48,6 +48,6 @@ class RecordScheduleRepository(
     }
 
     fun findScheduleItemByTitle(title: String): LiveData<RecordScheduleItem?> {
-        return dao.findScheduleItemByTitle(title).map { it as? RecordScheduleItem }
+        return dao.findScheduleItemByTitle(title).map { it }
     }
 }
