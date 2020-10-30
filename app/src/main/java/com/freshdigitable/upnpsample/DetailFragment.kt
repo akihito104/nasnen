@@ -37,17 +37,6 @@ class DetailFragment : Fragment() {
             fitMode = MaterialContainerTransform.FIT_MODE_WIDTH
             fadeMode = MaterialContainerTransform.FADE_MODE_THROUGH
             containerColor = Color.WHITE
-            // WORKAROUND: path motion is not worked when start point is equal to end point.
-            pathMotion = object : PathMotion() {
-                private val arcMotion = MaterialArcMotion()
-                override fun getPath(startX: Float, startY: Float, endX: Float, endY: Float): Path {
-                    return if (startX != endX || startY != endY) {
-                        arcMotion.getPath(startX, startY, endX, endY)
-                    } else {
-                        arcMotion.getPath(startX, startY - 1, endX, endY)
-                    }
-                }
-            }
         }
     }
 

@@ -72,7 +72,7 @@ class RecordScheduleRepositoryTest {
                 looper.idle()
             }
 
-            coVerify { dao.getAllRecordScheduleItemSource() }
+            verify { dao.getAllRecordScheduleItemSource() }
             assertThat(actual.value).isNotEmpty()
         }
     }
