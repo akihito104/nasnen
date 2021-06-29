@@ -2,9 +2,7 @@ package com.freshdigitable.upnpsample
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Path
 import android.os.Bundle
-import android.transition.PathMotion
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.navArgs
 import com.freshdigitable.upnpsample.di.ViewModelKey
-import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
 import dagger.Binds
 import dagger.Module
@@ -48,7 +44,7 @@ class DetailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         return inflater.inflate(R.layout.fragment_detail, container, false)
     }
