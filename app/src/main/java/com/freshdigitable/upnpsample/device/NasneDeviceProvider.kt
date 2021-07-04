@@ -93,6 +93,7 @@ class NasneDeviceProvider(context: Context) {
                     if (device.friendlyName == name) {
                         Log.d(TAG, "onDiscover: $device, parent>${device.parent}")
                         continuation.resume(device)
+                        this@searchDeviceByFriendlyName.removeDiscoveryListener(this)
                     }
                 }
 
